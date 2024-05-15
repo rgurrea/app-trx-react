@@ -1,0 +1,35 @@
+.vehicle-card {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 33px;
+}
+
+.update-link {
+    position: absolute;
+    top: 5px;
+    right: 80px;
+    background: blue;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.delete-button {
+    position: absolute;
+    height: 28px;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}

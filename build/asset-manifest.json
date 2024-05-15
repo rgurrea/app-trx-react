@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.61c4bf89.css",
+    "main.js": "/static/js/main.fb0be98e.js",
+    "static/js/453.c04aa4ef.chunk.js": "/static/js/453.c04aa4ef.chunk.js",
+    "static/media/Comfort_Premium.png": "/static/media/Comfort_Premium.c5fa19b2a5078ebed8c3.png",
+    "static/media/car.svg": "/static/media/car.dfb004bf37cfbb6c317f9a5b58d8c9de.svg",
+    "index.html": "/index.html",
+    "main.61c4bf89.css.map": "/static/css/main.61c4bf89.css.map",
+    "main.fb0be98e.js.map": "/static/js/main.fb0be98e.js.map",
+    "453.c04aa4ef.chunk.js.map": "/static/js/453.c04aa4ef.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.61c4bf89.css",
+    "static/js/main.fb0be98e.js"
+  ]
+}

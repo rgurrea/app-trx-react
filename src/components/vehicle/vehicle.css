@@ -1,0 +1,37 @@
+.vehicle-form-container {
+    margin: 7%;
+}
+
+.form-wrapper {
+    display: grid;
+    gap: 1rem;
+}
+
+.loading-indicator {
+    text-align: center;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.5rem;
+}
+
+.form-item {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0.5rem;
+}
+
+.error-message {
+    color: red;
+}
+
+.submit-button {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #007bff;
+    border: aliceblue;
+}
