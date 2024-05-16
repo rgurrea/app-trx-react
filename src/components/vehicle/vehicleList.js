@@ -5,18 +5,17 @@ import './vehicleList.css'; // Importa los estilos CSS
 import datosGeoJSON from '../../components/maps/datosGeoJSON'; // Importa los datos del archivo
 
 // Configura el cliente Socket.io para conectarse al servidor en localhost:3006
-//const socket = io('http://74.208.81.50:3006', { path: '/gpd/vehicle' });
-//const socket = io('http://localhost:3006/');
-const socket = io('https://www.api.merakimx.mx', { path: '/gpd/vehicle'});
-
-//const socket = io('http://127.0.0.1:3006',{ path: '/gpd/vehicle'});
-
+// const socket = io('http://74.208.81.50:3006', { path: '/gpd/vehicle' });
+// const socket = io('http://localhost:3006/');
+const socket = io('https://www.api.merakimx.mx', { path: '/gpd/vehicle' });
 
 function VehicleList({ onSelectVehicle, onListVehicle }) {
     const [vehicles, setVehicles] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1); // Página inicial
     const [selectedVehicles, setSelectedVehicles] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         fetchData();
@@ -27,20 +26,37 @@ function VehicleList({ onSelectVehicle, onListVehicle }) {
 
     const fetchData = async () => {
         try {
+            //const response = await fetch(`http://localhost:3006/ads?page=${page}`);
             const response = await fetch(`https://www.api.merakimx.mx/gpd/vehicle/ads?page=${page}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setVehicles(data);
+            setVehicles(data.ads);
+            setTotalPages(data.totalPages);
+            setCurrentPage(data.currentPage);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
-    const handleSearchChange = (event) => {
+    const handleSearchChange = async (event) => {
         setSearchTerm(event.target.value.toLowerCase());
         setPage(1); // Restablecer la página a 1 cuando cambie el término de búsqueda
+    
+        try {
+            //const response = await fetch(`http://localhost:3006/search?word=${event.target.value}&page=1`);
+            const response = await fetch(`https://www.api.merakimx.mx/gpd/vehicle/search?word=${event.target.value}&page=1`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setVehicles(data.ads);
+            setTotalPages(data.totalPages);
+            setCurrentPage(data.currentPage);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
     const handleNextPage = () => {
@@ -50,14 +66,6 @@ function VehicleList({ onSelectVehicle, onListVehicle }) {
     const handlePrevPage = () => {
         setPage(page - 1);
     };
-
-    const filteredVehicles = vehicles.filter((vehicle) =>
-        (vehicle.BRAND && vehicle.BRAND.toLowerCase().includes(searchTerm)) ||
-        (vehicle.MODEL && vehicle.MODEL.toLowerCase().includes(searchTerm)) ||
-        (vehicle.YEAR && vehicle.YEAR.toString().includes(searchTerm)) ||
-        (vehicle.COLOR && vehicle.COLOR.toLowerCase().includes(searchTerm)) ||
-        (vehicle.vim && vehicle.vim.toLowerCase().includes(searchTerm))
-    );
 
     const handleSelectVehicle = (vehicle) => {
         const index = selectedVehicles.findIndex(v => v._id === vehicle._id);
@@ -72,8 +80,8 @@ function VehicleList({ onSelectVehicle, onListVehicle }) {
         const generateRandomCoordinate = (min, max) => {
             return min + Math.random() * (max - min);
         };
-        vehicle['init'] = [generateRandomCoordinate(19.0, 20.0), generateRandomCoordinate(-100.0, -99.0)]
-        vehicle['end'] = [generateRandomCoordinate(19.0, 20.0), generateRandomCoordinate(-100.0, -99.0)]
+        vehicle['init'] = [generateRandomCoordinate(19.0, 20.0), generateRandomCoordinate(-100.0, -99.0)];
+        vehicle['end'] = [generateRandomCoordinate(19.0, 20.0), generateRandomCoordinate(-100.0, -99.0)];
         onSelectVehicle(vehicle);
     };
 
@@ -88,7 +96,7 @@ function VehicleList({ onSelectVehicle, onListVehicle }) {
                 <h2>Lista de Vehículos</h2>
                 <input type="text" placeholder="Buscar..." onChange={handleSearchChange} className="input-search" />
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                    {filteredVehicles.map(vehicle => (
+                    {vehicles.map(vehicle => (
                         <li onClick={() => handleSelectVehicleDetail(vehicle)} key={vehicle._id} style={{ margin: '10px 0', width: '97%', marginBottom: ' 8%', height: "100px" }}>
                             <div
                                 style={{
@@ -133,8 +141,10 @@ function VehicleList({ onSelectVehicle, onListVehicle }) {
             <div style={{ marginTop: '20px', textAlign: 'center' }}>
                 {/* Botón de página anterior */}
                 <button onClick={handlePrevPage} disabled={page === 1}>Anterior</button>
+                {/* Indicación de la página actual y total de páginas */}
+                <span style={{ margin: '0 10px' }}>{currentPage} de {totalPages}</span>
                 {/* Botón de página siguiente */}
-                <button onClick={handleNextPage}>Siguiente</button>
+                <button onClick={handleNextPage} disabled={page === totalPages}>Siguiente</button>
             </div>
         </div>
     );
